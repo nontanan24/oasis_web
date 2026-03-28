@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OASIS - Innovation for Life</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden-page {
+            display: none;
+        }
+
+        /* Slideshow */
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Zoom Frame */
+        .zoom-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            border-radius: 40px;
+            background-color: #f5f5f7;
+            cursor: zoom-in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image-zoom {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease-out, transform-origin 0.1s;
+            pointer-events: none;
+        }
+
+        .zoom-frame:hover .product-image-zoom {
+            transform: scale(1.5);
+        }
+
+        /* Gallery */
+        .gallery-thumb {
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            border: 2px solid transparent;
+        }
+
+        .thumb-active {
+            opacity: 1;
+            border-color: #000;
+        }
+
+        /* Notification */
+        #notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #000;
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 100px;
+            font-weight: 600;
+            z-index: 100;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Footer Links Style */
+        .footer-link {
+            color: #6e6e73;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #1d1d1f;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-black antialiased overflow-x-hidden">
+
+    <div id="notification">กำลังนำคุณไปยังหน้าติดต่อเรา...</div>
+
+    <!-- Navigation -->
+    Navigation -->
+    <header id="navbar"
+        class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 bg-white/80 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+            <!-- Brand with Logo as 'O' -->
+            <div onclick="navigateTo('home')"
+                class="text-xl md:text-2xl font-bold tracking-tighter cursor-pointer flex items-center">
+                <img src="LOGO2.5.png" alt="O" class="brand-logo-img h-8 md:h-10 mr-1.5">ASIS
+            </div>
+            <nav class="hidden md:flex gap-10">
+                <button onclick="navigateTo('home')"
+                    class="nav-link text-[11px] uppercase tracking-widest font-semibold"
+                    data-page="home">หน้าแรก</button>
+                <button onclick="navigateTo('products')"
+                    class="nav-link text-[11px] uppercase tracking-widest font-semibold text-gray-400"
+                    data-page="products">สินค้า</button>
+                <button onclick="navigateTo('about')"
+                    class="nav-link text-[11px] uppercase tracking-widest font-semibold text-gray-400"
+                    data-page="about">แบรนด์</button>
+                <button onclick="navigateTo('contact')"
+                    class="nav-link text-[11px] uppercase tracking-widest font-semibold text-gray-400"
+                    data-page="contact">ติดต่อ</button>
+            </nav>
+            <div class="flex items-center gap-6">
+                <i class="fas fa-search text-sm text-gray-500 cursor-pointer"></i>
+                <button onclick="toggleMenu()" class="md:hidden"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-[60] flex flex-col p-10 hidden">
+        <div class="flex justify-end"><button onclick="toggleMenu()"><i
+                    class="fas fa-times text-3xl text-black"></i></button></div>
+        <div class="flex flex-col gap-8 mt-10">
+            <button onclick="navigateTo('home'); toggleMenu()"
+                class="text-4xl font-bold text-left tracking-tighter">HOME</button>
+            <button onclick="navigateTo('products'); toggleMenu()"
+                class="text-4xl font-bold text-left tracking-tighter">PRODUCTS</button>
+            <button onclick="navigateTo('about'); toggleMenu()"
+                class="text-4xl font-bold text-left tracking-tighter">ABOUT</button>
+            <button onclick="navigateTo('contact'); toggleMenu()"
+                class="text-4xl font-bold text-left tracking-tighter">CONTACT</button>
+        </div>
+    </div>
+
+    <main id="content-area">
+        <!-- HOME PAGE -->
+        <section id="page-home" class="page-section fade-in">
+            <div class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
+                <!-- Large Logo Heading -->
+                <h1 class="text-7xl md:text-9xl font-bold tracking-tighter mb-4 flex items-center justify-center">
+                    <img src="LOGO2.5.png" alt="O" class="brand-logo-img h-24 md:h-40 mr-2 md:mr-4">ASIS.
+                </h1>
+                <p class="text-xl md:text-2xl font-light text-gray-500 mb-12">ดีไซน์ที่เรียบง่าย
+                    เพื่อคุณภาพชีวิตที่เหนือระดับ</p>
+
+                <div class="relative w-full max-w-4xl h-[450px] overflow-hidden rounded-[40px] bg-[#f5f5f7] mb-12 cursor-pointer shadow-sm"
+                    onclick="navigateTo('products')">
+                    <div class="slide active"><img src="เตา1.png" class="max-h-[85%] object-contain"></div>
+                    <div class="slide"><img src="ฟอก1.png" class="max-h-[85%] object-contain"></div>
+                    <div class="slide"><img src="ฟอกย1.png" class="max-h-[85%] object-contain"></div>
+                    <div class="slide"><img src="หม้อ5.png" class="max-h-[85%] object-contain"></div>
+                    <div class="slide"><img src="น้ำ2.png" class="max-h-[85%] object-contain"></div>
+                </div>
+
+                <button onclick="navigateTo('products')"
+                    class="bg-black text-white px-12 py-5 rounded-full font-bold hover:bg-gray-800 transition-all hover:scale-105 active:scale-95">
+                    เลือกซื้อสินค้า
+                </button>
+            </div>
+        </section>
+
+
+        <!-- PRODUCT LIST PAGE (Clean Version - No descriptions as requested) -->
+        <section id="page-products" class="page-section hidden-page pt-40 pb-32 px-6 max-w-6xl mx-auto">
+            <div id="full-product-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20"></div>
+        </section>
+
+        <!-- DETAIL PAGE (Full Info Here) -->
+        <section id="page-detail" class="page-section hidden-page pt-40 pb-32 px-6 max-w-6xl mx-auto">
+            <button onclick="navigateTo('products')"
+                class="flex items-center gap-2 text-gray-400 hover:text-black transition-colors mb-12 uppercase text-[10px] font-bold tracking-widest">
+                <i class="fas fa-chevron-left"></i> ย้อนกลับ
+            </button>
+
+            <div id="detail-content" class="grid lg:grid-cols-2 gap-16 items-start"></div>
+
+            <!-- Description & Specs Section (Visible only in detail) -->
+            <div id="detail-long-description" class="mt-24 w-full"></div>
+
+            <div class="mt-32 pt-20 border-t border-gray-100">
+                <h2 class="text-3xl font-bold tracking-tighter mb-12">สินค้าที่คุณอาจสนใจ</h2>
+                <div id="related-products-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- ABOUT PAGE -->
+        <section id="page-about" class="page-section hidden-page pt-40 pb-32 px-6 max-w-4xl mx-auto text-center">
+            <h2 class="text-5xl font-bold tracking-tighter mb-10">แบรนด์ของเรา</h2>
+            <p class="text-xl text-gray-500 font-light mb-10 leading-relaxed">
+                เรามุ่งเน้นการสร้างสรรค์นวัตกรรมที่ใช้งานง่ายและสวยงาม</p>
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"
+                class="w-full rounded-[40px]" alt="Office">
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section id="page-contact" class="page-section hidden-page pt-40 pb-32 px-6 max-w-xl mx-auto text-center">
+            <h2 class="text-5xl font-bold tracking-tighter mb-10">คุยกับเรา</h2>
+            <div class="bg-[#f5f5f7] rounded-[40px] p-12 text-left mb-10">
+                <p class="text-gray-400 uppercase text-[10px] font-bold tracking-widest mb-2">Email</p>
+                <p class="text-2xl font-bold mb-8">hello@oasis.com</p>
+                <p class="text-gray-400 uppercase text-[10px] font-bold tracking-widest mb-2">Line ID</p>
+                <p class="text-2xl font-bold mb-8">@oasis.tech</p>
+            </div>
+            <button onclick="navigateTo('home')"
+                class="text-xs uppercase tracking-widest font-bold border-b-2 border-black pb-1">กลับสู่หน้าหลัก</button>
+        </section>
+    </main>
+
+    <!-- MINIMAL FOOTER -->
+    <footer class="bg-white text-[#1d1d1f] pt-20 pb-10 px-6 border-t border-gray-100">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold tracking-tighter mb-2 flex items-center">
+                        <img src="LOGO1.png" alt="O" class="brand-logo-img h-10 md:h-12 mr-1">ASIS.
+                    </h2>
+                    <p class="text-sm text-gray-400">Innovative living for a better tomorrow.</p>
+                </div>
+                <div class="flex gap-8">
+                    <button onclick="navigateTo('home')"
+                        class="footer-link uppercase font-bold tracking-widest text-[10px]">Home</button>
+                    <button onclick="navigateTo('products')"
+                        class="footer-link uppercase font-bold tracking-widest text-[10px]">Products</button>
+                    <button onclick="navigateTo('about')"
+                        class="footer-link uppercase font-bold tracking-widest text-[10px]">About</button>
+                    <button onclick="navigateTo('contact')"
+                        class="footer-link uppercase font-bold tracking-widest text-[10px]">Contact</button>
+                </div>
+            </div>
+
+            <div class="mt-16 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between gap-4">
+                <p class="text-[11px] text-gray-400 uppercase tracking-widest">© 2026 OASIS Technology. All Rights
+                    Reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="text-[11px] text-gray-400 hover:text-black">Privacy Policy</a>
+                    <a href="#" class="text-[11px] text-gray-400 hover:text-black">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: "MASTER CLEAN K06-CPM",
+                tagline: "PURE AIR, REDEFINED.",
+                price: "49,800.-",
+                details: "เครื่องฟอกอากาศรุ่นกะทัดรัด เหมาะสำหรับห้องนอนหรือโต๊ะทำงาน มอบอากาศบริสุทธิ์ในดีไซน์มินิมอล", longDescription: `
+                    <div class="mt-8 text-left bg-[#f5f5f7] p-10 md:p-16 rounded-[40px] fade-in">
+                        <h3 class="text-3xl font-bold mb-8 tracking-tighter">Description</h3>
+                        <div class="grid md:grid-cols-2 gap-12 text-[#1d1d1f]">
+                            <div class="space-y-4">
+                                <p>1. ระบบกรองอากาศประสิทธิภาพสูง ผสานการทำงานของแผ่นกรองหลายชั้น (Aluminum, HEPA, Cold Catalyst และ Carbon) ดักจับฝุ่น PM2.5 ขนสัตว์ และเกสรดอกไม้ได้อย่างมั่นใจ</p>
+                                <p>2. เทคโนโลยีฆ่าเชื้อด้วยแสง UV และประจุลบ (Anion) ช่วยยับยั้งเชื้อแบคทีเรีย สลายสารพิษฟอร์มาลดีไฮด์ในอากาศ และปล่อยประจุลบเพื่อคืนความสดชื่นเสมือนอยู่ท่ามกลางธรรมชาติ</p>
+                                <p>3. เซนเซอร์อัจฉริยะพร้อมจอ LED ตรวจจับคุณภาพอากาศแบบ Real-time แสดงผลค่าฝุ่น PM2.5 ชัดเจนผ่านหน้าจอ พร้อมโหมด Auto ที่ปรับความแรงลมตามสภาพอากาศโดยอัตโนมัติ</p>
+                                <p>4. โหมด Sleep เพื่อการพักผ่อนอย่างแท้จริง เครื่องทำงานเงียบสนิทและลดแสงไฟรบกวนจากหน้าจอ พร้อมลดการใช้พลังงาน ช่วยให้คุณหลับสนิทตลอดคืน</p>
+                                <p>5. ควบคุมสะดวกแบบ 2-in-1 สั่งงานง่ายดายผ่านแผงระบบสัมผัส (Touch Panel) ดีไซน์ล้ำสมัยด้านบนตัวเครื่อง หรือสั่งการระยะไกลผ่านรีโมทคอนโทรลที่แถมมาในชุด</p>
+                                <p>6. ฟังก์ชันครบครัน ปลอดภัยสำหรับทุกคน มาพร้อมระบบตั้งเวลาปิดล่วงหน้า (Timer) และระบบล็อคปุ่มกด (Child Lock) ป้องกันเด็กเล็กกดเล่นโดยไม่ได้ตั้งใจ</p>
+                            </div>
+                            <div class="space-y-2 border-l border-gray-300 pl-8">
+                                <p><strong>ชื่อผลิตภัณฑ์:</strong> เครื่องฟอกอากาศอัจฉริยะ (รุ่น K06-CPM)</p>
+                                <p><strong>กำลังไฟ:</strong> 80w</p>
+                                <p><strong>แรงดันไฟฟ้า:</strong> 220V~ / 50Hz</p>
+                                <p><strong>อัตราการสร้างอากาศบริสุทธิ์:</strong> 320m³/h</p>
+                                <p><strong>พื้นที่ที่เหมาะสม:</strong>  ครอบคลุมพื้นที่ 40 ตร.ม.</p>
+                                <p><strong>การควบคุม:</strong> หน้าจอสัมผัส LED / รีโมทคอนโทรล</p>
+                                <p><strong>ระบบเสริม:</strong> HEPA + UV Sterilize Light + Anion</p>
+                                <p><strong>สี:</strong> white</p>
+                               
+                               
+                                
+                            </div>
+                        </div>
+                    </div>
+                `,
+                features: ["Compact Design", "Night Mode", "Energy Efficient"],
+                images: ["ฟอก1.png", "ฟอก2.png", "ฟอก3.png", "ฟอก7.jpg", "ฟอก8.jpg", "ฟอก4.jpg", "ฟอก5.jpg"]
+            },
+            {
+                id: 2,
+                name: "AIR PURIFIER K08E",
+                tagline: "COMPACT FRESHNESS.",
+                price: "54,800.-",
+                details: "ที่สุดของความบริสุทธิ์ ผสานเทคโนโลยี HEPA 13 ขั้นสูงเพื่อกำจัดฝุ่น PM2.5 และเชื้อโรคได้อย่างมีประสิทธิภาพสูงสุด ระบบเซนเซอร์ตรวจจับอากาศแบบ Real-time ช่วยให้คุณมั่นใจในทุกลมหายใจ",
+                longDescription: `
+                    <div class="mt-8 text-left bg-[#f5f5f7] p-10 md:p-16 rounded-[40px] fade-in">
+                        <h3 class="text-3xl font-bold mb-8 tracking-tighter">Description</h3>
+                        <div class="grid md:grid-cols-2 gap-12 text-[#1d1d1f]">
+                            <div class="space-y-4">
+                                <p>1. ระบบฟอกอากาศขั้นสุด 7 ขั้นตอน ผสานนวัตกรรมแผ่นกรอง 7 ชั้น (Pre-filter, Cold touch, Carbon, Sterilizing, HEPA, UV-C และ Anion) จัดการฝุ่น PM2.5 ควัน และสารก่อภูมิแพ้ได้อย่างเด็ดขาด</p>
+                                <p>2. นวัตกรรม UV-C และประจุลบ (Anion Release) รังสีอัลตราไวโอเลตฆ่าเชื้อไวรัสและแบคทีเรียในอากาศได้อย่างรวดเร็ว พร้อมปล่อยประจุลบคืนความสดชื่นเสมือนอยู่ท่ามกลางธรรมชาติ</p>
+                                <p>3. ระบบเติมน้ำเพิ่มความชุ่มชื้น (Oxygen-Infused Hydration) ฟีเจอร์ 3-in-1 พิเศษ ไม่เพียงแค่กรองอากาศ แต่ช่วยปรับสมดุลความชื้นและเพิ่มออกซิเจนในห้อง ไม่ให้ผิวแห้งกร้านเมื่อเปิดแอร์</p>
+                                <p>4. ครอบคลุมพื้นที่กว้างถึง 60 ตารางเมตร ด้วยมอเตอร์ทรงพลัง กระจายอากาศบริสุทธิ์ได้รวดเร็ว เหมาะสำหรับห้องนั่งเล่นขนาดใหญ่ สำนักงาน หรือห้องนอนมาสเตอร์</p>
+                                <p>5. หน้าจอสัมผัสกว้าง สั่งการผ่านแอปพลิเคชัน จอแสดงผลค่าฝุ่น (AQI) แบบ Real-time ใช้งานง่าย พร้อมรองรับการสั่งงานทางไกลผ่าน Wi-Fi (App Control) สะดวกทุกที่ทุกเวลา</p>
+                                <p>6. ดีไซน์มินิมอล ทำงานเงียบสนิท รูปลักษณ์โค้งมนหรูหราเข้ากับทุกสไตล์บ้าน มาพร้อมโหมดการทำงานที่ให้เสียงเงียบสงบ ไม่รบกวนการพักผ่อนและการทำงาน</p>
+                            </div>
+                            <div class="space-y-2 border-l border-gray-300 pl-8">
+                                <p><strong>ชื่อผลิตภัณฑ์:</strong> เครื่องฟอกอากาศอัจฉริยะ 3-in-1 (รุ่น K08E)</p>
+                                <p><strong>กำลังไฟ:</strong> 85w</p>
+                                <p><strong>แรงดันไฟฟ้า:</strong> 220V~ / 50Hz</p>
+                                <p><strong>อัตราการสร้างอากาศบริสุทธิ์:</strong> 488 m³/h</p>
+                                <p><strong>พื้นที่ที่เหมาะสม:</strong>  ครอบคลุมพื้นที่ 60 ตร.ม.</p>
+                                <p><strong>ฟังก์ชันพิเศษ:</strong> เพิ่มความชุ่มชื้นและออกซิเจน (Hydration)</p>
+                                <p><strong>การควบคุม:</strong> หน้าจอสัมผัส LED / รีโมทคอนโทรล</p>
+                                <p><strong>ระบบเสริม:</strong> UC-CLamp & Negative ion</p>
+                                <p><strong>สี:</strong> white</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                `,
+                features: ["HEPA 13 Filtration", "AI Smart Sensor", "Ultra Quiet 20dB"],
+                images: ["ฟอกย1.png", "ฟอกย3.png", "ฟอกย4.jpg", "ฟอก8.jpg", "ฟอกย7.jpg", "ฟอกย8.jpg",]
+            },
+            {
+                id: 3,
+                name: "SMART COOKER AT-999",
+                tagline: "PRECISION COOKING.",
+                price: "49,800.-",
+                details: "เตาไฟฟ้าเซรามิคดีไซน์พรีเมียม ควบคุมความร้อนได้อย่างแม่นยำเพื่อผลลัพธ์การปรุงอาหารระดับเชฟ ทนทานและปลอดภัยสูงสุดสำหรับครอบครัว",
+                longDescription: `
+                    <div class="mt-8 text-left bg-[#f5f5f7] p-10 md:p-16 rounded-[40px] fade-in">
+                        <h3 class="text-3xl font-bold mb-8 tracking-tighter">Description</h3>
+                        <div class="grid md:grid-cols-2 gap-12 text-[#1d1d1f]">
+                            <div class="space-y-4">
+                                <p>1. ป้องกันการระเบิดของแผ่นเซรามิกที่ทนต่อการแตกร้าว ทนต่ออุณหภูมิสูง 500 °รอยแตกมากขึ้น น้ำมันมากขึ้น กันน้ำได้มากขึ้น</p>
+                                <p>2. เปลือกสแตนเลสหนาขึ้น ความจุแบริ่ง 65kg</p>
+                                <p>3. ไม่มีรังสีความถี่สูง การใช้ลวดต้านทานความร้อน สตรีมีครรภ์สามารถใช้ในครอบครัวได้อย่างมั่นใจ</p>
+                                <p>4. 3500W เพื่อผัดให้เสร็จ 5 วินาทีร้อนเร็วมาก</p>
+                                <p>5. ทำประเภทอาหารได้หลากหลาย อาทิ นึ่ง ต้ม ทอด ย่าง อบ ตุ๋น ซุป และอื่นๆ</p>
+                                <p>6. ควบคุมได้หลายระดับ ปรับได้ตามใจนึก</p>
+                            </div>
+                            <div class="space-y-2 border-l border-gray-300 pl-8">
+                                <p><strong>ชื่อผลิตภัณฑ์:</strong> เตาไฟฟ้าเซรามิค</p>
+                                <p><strong>กำลังไฟ:</strong> 3500W</p>
+                                <p><strong>แรงดันไฟฟ้า:</strong> 220V / 50Hz</p>
+                                <p><strong>ช่วงอุณหภูมิ:</strong> 80-270 °</p>
+                                <p><strong>ขนาดสินค้า:</strong> 410*300*65(mm)</p>
+                                <p><strong>สี:</strong> black, white</p>
+                                <p><strong>ประเภทแผง:</strong> แผงไมโครคริสตัลไลน์ป้องกันการระเบิด</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                features: ["Dual-Zone Heating", "Haptic Control", "Crystal Glass Surface"],
+                images: ["เตา1.png", "เตา5.png", "เตา4.png", "เตา8.jpg", "เตา3.jpg", "เตา6.jpg", "เตา7.jpg"]
+            },
+            {
+                id: 4,
+                name: "Oasis Hot & Cold Water Purifier",
+                tagline: "PURE HYDRATION.",
+                price: "49,800.-",
+                details: "เครื่องกรองน้ำอัจฉริยะที่กรองสารปนเปื้อนได้ถึง 99.9% มอบน้ำสะอาดบริสุทธิ์พร้อมแร่ธาตุที่จำเป็นต่อร่างกาย",
+                longDescription: `
+                    <div class="mt-8 text-left bg-[#f5f5f7] p-10 md:p-16 rounded-[40px] fade-in">
+                        <h3 class="text-3xl font-bold mb-8 tracking-tighter">Description</h3>
+                        <div class="grid md:grid-cols-2 gap-12 text-[#1d1d1f]">
+                            <div class="space-y-4">
+                                <p>1. ระบบการกรองเข้มข้น 5 ขั้นตอน ด้วยเทคโนโลยี UF Membrane ความละเอียด 0.0001 ไมครอน กรองเชื้อโรคและโลหะหนักได้หมดจด</p>
+                                <p>2. เลือกได้ทั้งน้ำร้อนและน้ำเย็น ตอบโจทย์ทุกความต้องการ ไม่ว่าจะชงกาแฟร้อนๆ หรือดื่มน้ำเย็นชื่นใจได้ในเครื่องเดียว</p>
+                                <p>3. ระบบ 5S Quick Replacement ออกแบบให้เปลี่ยนไส้กรองได้ง่ายเพียง 2 ขั้นตอน "ดึงขึ้นและบิด" ทำเองได้ที่บ้านภายในไม่กี่วินาที</p>
+                                <p>4. ไส้กรองคุณภาพสูง 5 ชนิด ประกอบด้วย Sediment, Carbon Block, Softener, UF และ Post-Active Carbon เพื่อรสชาติน้ำที่สะอาดนุ่มนวล</p>
+                                <p>5. เหมาะสำหรับพื้นที่น้ำคุณภาพต่ำ ประสิทธิภาพการกรองสูงเป็นพิเศษ สามารถขจัดสารปนเปื้อน แมลง สนิม และกลิ่นคลอรีนได้อย่างมีประสิทธิภาพ</p>
+                                <p>6. ดีไซน์ทันสมัย ประหยัดพื้นที่ ตัวเครื่องขนาดกะทัดรัด แผงหน้าปัดโลหะเรียบหรู เข้ากับการตกแต่งบ้านและคอนโดสมัยใหม่</p>
+                            </div>
+                            <div class="space-y-2 border-l border-gray-300 pl-8">
+                                <p><strong>ชื่อผลิตภัณฑ์:</strong> ตู้กดน้ำดื่มระบบกรอง UF อัจฉริยะ</p>
+                                <p><strong>เหมาะสำหรับ: </strong> บ้านพักอาศัย, คอนโด, สำนักงานขนาดเล็ก</p>
+                                <p><strong>แรงดันไฟฟ้า:</strong> 220V-240v / 50Hz</p>
+                                <p><strong>ช่วงอุณหภูมิ:</strong> ร้อนได้ 85°C-95°C เย็นได้ 6°C-10°C</p>
+                                <p><strong>ความละเอียดการกรอง:</strong>  0.0001 Micron (UF Membrane)</p>
+                                <p><strong>สี:</strong> white</p>
+                                <p><strong>จำนวนไส้กรอง: </strong> 5 Stages (Sediment / Carbon / Softener / UF / Post)</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                features: ["RO Filter System", "Smart Display", "Mineral Balance"],
+                images: ["น้ำ2.png", "น้ำ1.png", "น้ำ4.jpg", "น้ำ3.jpg"]
+            },
+            {
+                id: 5,
+                name: "OASIS kitchen set",
+                tagline: "COMPACT FRESHNESS.",
+                price: "14,900.-",
+                details: "ชุดเครื่องครัวสแตนเลสสตีลเกรดพรีเมียม กระจายความร้อนได้สม่ำเสมอ ทนทานต่อการใช้งานหนัก",
+                longDescription: `
+                    <div class="mt-8 text-left bg-[#f5f5f7] p-10 md:p-16 rounded-[40px] fade-in">
+                        <h3 class="text-3xl font-bold mb-8 tracking-tighter">Description</h3>
+                        <div class="grid md:grid-cols-2 gap-12 text-[#1d1d1f]">
+                            <div class="space-y-4">
+                                <p>1. โครงสร้างฐานหนา 5 ชั้น (5 Layers Bottom) กระจายความร้อนได้รวดเร็วและสม่ำเสมอ ช่วยให้ประหยัดพลังงานและรักษาอุณหภูมิได้นาน</p>
+                                <p>2. วัสดุสเตนเลสสตีลคุณภาพสูง ทนทานต่อการเกิดสนิมและการกัดกร่อน ผิวนอกเงางามแบบ Mirror Polish ดีไซน์หรูหราด้วยมือจับสีทอง</p>
+                                <p>3. ชุดอุปกรณ์ครบครัน 12 ชิ้น ครอบคลุมทุกการทำอาหาร ทั้งหม้อต้มหลายขนาด กระทะทอด และหม้อด้าม ตอบโจทย์ทุกเมนูในชุดเดียว</p>
+                                <p>4. ฝาแก้วนิรภัยสีชา (Brown Tempered Glass) ทนความร้อนสูง พร้อมรูระบายอากาศ ช่วยให้มองเห็นอาหารภายในได้ชัดเจนโดยไม่ต้องเปิดฝา</p>
+                                <p>5. ใช้งานได้กับเตาทุกประเภท ออกแบบมาให้รองรับทั้งเตาแก๊ส เตาเซรามิก และเตาแม่เหล็กไฟฟ้า (Induction) ได้อย่างมีประสิทธิภาพ</p>
+                                <p>6. ด้ามจับกันความร้อน (Heat-Resistant Handles) ออกแบบให้จับกระชับมือ แข็งแรงทนทาน มั่นใจความปลอดภัยขณะยกหรือเคลื่อนย้าย</p>
+                            </div>
+                            <div class="space-y-2 border-l border-gray-300 pl-8">
+                                <p><strong>ชื่อผลิตภัณฑ์:</strong> ชุดเครื่องครัว Oasis Masterpiece (BE-8013)</p>
+                                <p><strong>จำนวนอุปกรณ์: </strong> 12 ชิ้น (รวมฝา)</p>
+                                <p><strong>วัสดุฐาน:</strong>  5 Layers Capsule Bottom</p>
+                                <p><strong>วัสดุตัวเรือน:</strong>  High-Quality Stainless Steel</p>
+                                <p><strong>ประเภทฝา: </strong>  ฝาแก้วนิรภัยสีชาพร้อมช่องระบายไอน้ำ</p>
+                                <p><strong>เหมาะสำหรับ:</strong>  ต้ม, ผัด, แกง, ทอด (ใช้ได้กับเตาแม่เหล็กไฟฟ้า)</p>
+                                <p><strong>สี:</strong> Silver / Rose Gold Accents</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                `,
+                features: ["Premium Stainless Steel", "Heat-Resistant Handles", "Non-stick Surface"],
+                images: ["หม้อ5.png", "หม้อ4.png", "หม้อ3.png", "หม้อ2.jpg", "หม้อ1.jpg", "หม้อ7.jpg"]
+            }
+
+        ];
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        setInterval(() => {
+            if (slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }, 4000);
+
+        function handleZoom(e) {
+            const frame = e.currentTarget;
+            const img = frame.querySelector('.product-image-zoom');
+            const rect = frame.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            img.style.transformOrigin = `${x}% ${y}%`;
+        }
+
+        function resetZoom(e) {
+            e.currentTarget.querySelector('.product-image-zoom').style.transformOrigin = 'center center';
+        }
+
+        function updateMainImage(src, thumb) {
+            document.getElementById('main-detail-image').src = src;
+            document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('thumb-active'));
+            thumb.classList.add('thumb-active');
+        }
+
+        function renderFullProducts() {
+            const grid = document.getElementById('full-product-grid');
+            grid.innerHTML = products.map(p => `
+                <div class="product-card group cursor-pointer" onclick="showDetail(${p.id})">
+                    <div class="bg-[#f5f5f7] rounded-[40px] p-12 flex justify-center mb-6 overflow-hidden">
+                        <img src="${p.images[0]}" class="h-72 object-contain group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="flex justify-between items-center px-4">
+                        <h3 class="text-3xl font-bold tracking-tighter">${p.name}</h3>
+                        <span class="text-xl font-medium text-gray-500">${p.price}</span>
+                    </div>
+                    <!-- คำอธิบายถูกนำออกตามความต้องการ -->
+                </div>
+            `).join('');
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => section.classList.add('hidden-page'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden-page');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showDetail(id) {
+            const p = products.find(prod => prod.id === id);
+            const content = document.getElementById('detail-content');
+            content.innerHTML = `
+                <div class="sticky top-32">
+                    <div class="zoom-frame p-12 md:p-20" onmousemove="handleZoom(event)" onmouseleave="resetZoom(event)">
+                        <img id="main-detail-image" src="${p.images[0]}" class="product-image-zoom">
+                    </div>
+                    <div class="flex justify-center gap-4 mt-8">
+                        ${p.images.map((img, idx) => `
+                            <img src="${img}" onclick="updateMainImage('${img}', this)" 
+                                 class="gallery-thumb w-20 h-20 object-cover rounded-2xl cursor-pointer ${idx === 0 ? 'thumb-active' : ''}">
+                        `).join('')}
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-5xl lg:text-7xl font-bold tracking-tighter mb-4">${p.name}</h1>
+                    <p class="text-gray-400 font-bold uppercase tracking-widest text-sm mb-6">${p.tagline}</p>
+                    <p class="text-3xl font-semibold mb-8">${p.price}</p>
+                    <p class="text-xl text-gray-500 font-light leading-relaxed mb-12">${p.details}</p>
+                    <div class="space-y-4 mb-12">
+                        ${p.features.map(f => `<div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 flex items-center gap-3"><i class="fas fa-check text-xs"></i> <span class="text-sm font-medium">${f}</span></div>`).join('')}
+                    </div>
+                    <button onclick="handleInquiry()" class="w-full py-6 bg-black text-white rounded-full font-bold text-xl hover:bg-gray-800 transition-colors shadow-xl">
+                        ติดต่อสอบถาม
+                    </button>
+                </div>
+            `;
+
+            const longDesc = document.getElementById('detail-long-description');
+            longDesc.innerHTML = p.longDescription || '';
+
+            const relatedGrid = document.getElementById('related-products-grid');
+            relatedGrid.innerHTML = products.filter(item => item.id !== id).map(item => `
+                <div onclick="showDetail(${item.id})" class="cursor-pointer group">
+                    <div class="bg-[#f5f5f7] rounded-3xl p-6 mb-4 overflow-hidden flex justify-center">
+                        <img src="${item.images[0]}" class="h-32 object-contain group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <h4 class="font-bold text-sm">${item.name}</h4>
+                </div>
+            `).join('');
+            navigateTo('detail');
+        }
+
+        function handleInquiry() {
+            const n = document.getElementById('notification');
+            n.classList.add('show');
+            setTimeout(() => { n.classList.remove('show'); navigateTo('contact'); }, 1000);
+        }
+
+        function toggleMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        window.onload = renderFullProducts;
+    </script>
+</body>
+
+</html>
